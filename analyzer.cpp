@@ -1,4 +1,4 @@
-// have to add support for recognise the unsigned data type, will do when I wake up
+// Need to add support to recognize the unsigned data type
 
 #include "llvm/Pass.h"
 #include "llvm/IR/Module.h"
@@ -21,13 +21,13 @@ using namespace std;
 
 namespace
 {
-    struct testing : public ModulePass
+    struct analyzer : public ModulePass
     {
         static char ID;
         LLVMContext* Context;
         set<unsigned int> line;
         set<unsigned int>::iterator iter;
-        testing() : ModulePass(ID) {}
+        analyzer() : ModulePass(ID) {}
 
         bool fooexpr(Instruction *vi)
         {
@@ -52,7 +52,7 @@ namespace
                     if(Instruction *ti = dyn_cast<Instruction>(*i))
                     {
 //                      errs() << *vi << "     \t    " << *ti << "\n";
-                        if(testing::fooexpr(ti))
+                        if(analyzer::fooexpr(ti))
                         {
                             break;
                         }
@@ -80,7 +80,7 @@ namespace
                             {
                                 if(!isa<AllocaInst>(*vi))
                                 {
-                                    ret=testing::fooexpr(vi);
+                                    ret=analyzer::fooexpr(vi);
                                 }
                             }
                         }
@@ -93,7 +93,7 @@ namespace
                                 {
                                     if(!isa<AllocaInst>(*vi))
                                     {
-                                        ret=testing::fooexpr(vi);
+                                        ret=analyzer::fooexpr(vi);
                                     }
                                 }
                                 else
@@ -112,7 +112,7 @@ namespace
                                 {
                                     if(!isa<AllocaInst>(*vi))
                                     {
-                                        ret=testing::fooexpr(vi);
+                                        ret=analyzer::fooexpr(vi);
                                     }
                                 }
                                 else
@@ -132,7 +132,7 @@ namespace
                 }
             }
             ofstream filewrite;
-            filewrite.open("/Users/abhinashjain/irfiles/zzzline.txt");
+            filewrite.open("~/irfiles/LoC.txt");
             for(iter=line.begin(); iter!=line.end(); iter++)
                 filewrite << "Line:" << *iter << " \n";
             filewrite.close();
@@ -140,5 +140,5 @@ namespace
         }
     };
 }
-char testing::ID = 0;
-static RegisterPass<testing> X("testing", "test function exist", false, false);
+char analyzer::ID = 0;
+static RegisterPass<analyzer> X("analyzer", "test function exist", false, false);
